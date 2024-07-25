@@ -2,12 +2,14 @@ let timer;
 let timeLeft = 1500; // 25 minutes in seconds
 let isRunning = false;
 let isBreak = false;
+let workSessions = 0;
 
 const minutesDisplay = document.getElementById('minutes');
 const secondsDisplay = document.getElementById('seconds');
 const startButton = document.getElementById('start');
 const resetButton = document.getElementById('reset');
 const skipButton = document.getElementById('skip');
+const workSessionsCount = document.getElementById('workSessionsCount');
 
 function updateDisplay() {
     const minutes = Math.floor(timeLeft / 60);
@@ -27,8 +29,15 @@ function startTimer() {
                 alert('Break is over! Time to get back to work.');
                 resetTimer();
             } else {
-                alert('Time is up! Starting 5-minute break.');
-                startBreak();
+                workSessions++;
+                workSessionsCount.textContent = workSessions;
+                if (workSessions % 4 === 0) {
+                    alert('Time is up! Starting 15-minute long break.');
+                    startBreak(true);
+                } else {
+                    alert('Time is up! Starting 5-minute break.');
+                    startBreak(false);
+                }
             }
         } else {
             timeLeft--;
@@ -37,9 +46,9 @@ function startTimer() {
     }, 1000);
 }
 
-function startBreak() {
+function startBreak(isLongBreak) {
     isBreak = true;
-    timeLeft = 300; // 5 minutes in seconds
+    timeLeft = isLongBreak ? 900 : 300; // 15 minutes or 5 minutes in seconds
     updateDisplay();
     startTimer();
 }
@@ -61,8 +70,15 @@ function skipTimer() {
         alert('Break is over! Time to get back to work.');
         resetTimer();
     } else {
-        alert('Time is up! Starting 5-minute break.');
-        startBreak();
+        workSessions++;
+        workSessionsCount.textContent = workSessions;
+        if (workSessions % 4 === 0) {
+            alert('Time is up! Starting 15-minute long break.');
+            startBreak(true);
+        } else {
+            alert('Time is up! Starting 5-minute break.');
+            startBreak(false);
+        }
     }
 }
 
